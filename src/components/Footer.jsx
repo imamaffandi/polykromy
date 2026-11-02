@@ -2,12 +2,11 @@ import { useRef } from 'react'
 import { ArrowUpRight } from '@phosphor-icons/react'
 import { useFitText } from '../hooks/useFitText'
 
-// TODO: replace the "#" hrefs with the real Polykromy channels.
 const CHANNELS = [
-  { label: 'Roblox group', href: '#' },
-  { label: 'Discord', href: '#' },
-  { label: 'X / Twitter', href: '#' },
-  { label: 'Email', href: '#' },
+  { label: 'Discord', href: 'https://discord.gg/FXTWvbpBY' },
+  { label: 'YouTube', href: 'https://www.youtube.com/@Polykromy' },
+  { label: 'TikTok', href: 'https://www.tiktok.com/@polykromy' },
+  { label: 'Instagram', href: 'https://www.instagram.com/polykromy.id/' },
 ]
 
 export function Footer() {
@@ -37,7 +36,7 @@ export function Footer() {
         <ul className="footer__links">
           {CHANNELS.map((c) => (
             <li key={c.label}>
-              <a href={c.href}>
+              <a href={c.href} target="_blank" rel="noopener noreferrer">
                 <span>{c.label}</span>
                 <ArrowUpRight size={22} weight="bold" aria-hidden="true" />
               </a>
