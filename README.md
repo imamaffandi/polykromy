@@ -19,19 +19,19 @@ asset URLs (`base: './'`), so it works under any repo path or a custom domain.
 
 ## Structure
 
-| Path | What lives there |
-| --- | --- |
-| `src/content/site.js` | All copy and media: chapters, process steps, games, channels, nav |
-| `src/components/story/` | The sticky 3D story (chapters A S C D F L), process rail, chapter HUD |
-| `src/story/storyTimeline.js` | Scroll choreography: one timeline drives both the scene state and the HTML |
-| `src/gl/` | OGL renderer: `WorldStage` (canvas + render loop), `island` (island layout), `kit` (GLB loader), shaders |
-| `src/components/games/` | Games showcase (horizontal pin on desktop, stacked on mobile) |
-| `src/components/Companion.jsx` | Inky, the Piixpal guide: section-aware tips, quick navigation |
-| `src/components/Interactions.jsx` | Custom cursor, magnetic buttons, text scramble (fine pointers only) |
-| `src/lib/siteStore.js` | Tiny store for rarely-changing shared state (active section, loader) |
-| `src/assets/webgl/` | Low-poly nature kit (`.glb`) used to build the island |
-| `src/assets/media/` | Web-optimised key art (`.webp`) and gameplay/process clips (`.mp4`) |
-| `public/` | The four fonts, favicon and logo |
+| Path                              | What lives there                                                                                         |
+| --------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `src/content/site.js`             | All copy and media: chapters, process steps, games, channels, nav                                        |
+| `src/components/story/`           | The sticky 3D story (chapters A S C D F L), process rail, chapter HUD                                    |
+| `src/story/storyTimeline.js`      | Scroll choreography: one timeline drives both the scene state and the HTML                               |
+| `src/gl/`                         | OGL renderer: `WorldStage` (canvas + render loop), `island` (island layout), `kit` (GLB loader), shaders |
+| `src/components/games/`           | Games showcase (horizontal pin on desktop, stacked on mobile)                                            |
+| `src/components/Companion.jsx`    | Inky, the Piixpal guide: section-aware tips, quick navigation                                            |
+| `src/components/Interactions.jsx` | Custom cursor, magnetic buttons, text scramble (fine pointers only)                                      |
+| `src/lib/siteStore.js`            | Tiny store for rarely-changing shared state (active section, loader)                                     |
+| `src/assets/webgl/`               | Low-poly nature kit (`.glb`) used to build the island                                                    |
+| `src/assets/media/`               | Web-optimised key art (`.webp`) and gameplay/process clips (`.mp4`)                                      |
+| `public/`                         | The four fonts, favicon and logo                                                                         |
 
 ## Content updates
 
@@ -57,3 +57,5 @@ Only four local fonts, declared in `src/index.css`:
 
 With `prefers-reduced-motion: reduce` the story renders as one still image followed by plain, stacked chapters.
 Pinning, scrubbing, the custom cursor and companion motion are all off. The custom cursor never runs on touch devices.
+
+\*Redeploy
