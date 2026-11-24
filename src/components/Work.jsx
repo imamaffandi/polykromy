@@ -1,16 +1,19 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import { useGSAP } from '@gsap/react'
 import { Crown, Flask, GameController } from '@phosphor-icons/react'
+import { useSectionTracker } from '../hooks/useSectionTracker'
+import { hasFinePointer, MOTION_OK } from '../lib/env'
+import { PixelText } from './PixelText'
 
-const CELLS = [
+const ROWS = [
   {
     key: 'experiences',
     tag: 'Worlds',
     title: 'Roblox experiences',
     body: 'Original interactive worlds, built from scratch and tuned with players until they feel right to play.',
     Icon: GameController,
-    variant: 'ink',
+    link: { href: '#games', label: 'See the games' },
   },
   {
     key: 'accessories',
@@ -18,7 +21,6 @@ const CELLS = [
     title: 'Digital accessories',
     body: 'Wearable designs for avatars. Clear silhouettes and bold forms that stand out in a crowded server.',
     Icon: Crown,
-    variant: 'stripe',
   },
   {
     key: 'experiments',
@@ -26,37 +28,43 @@ const CELLS = [
     title: 'Experiments',
     body: 'Prototypes, odd mechanics and side projects. Where the next idea gets tested before it ships.',
     Icon: Flask,
-    variant: 'dots',
   },
 ]
 
+/** Splits a title into per-letter spans for the hover wave. */
+function Wave({ text }) {
+  return (
+    <span className="wave" aria-label={text}>
+      {text.split('').map((ch, i) => (
+        <span key={i} aria-hidden="true" style={{ '--i': i }}>
+          {ch === ' ' ? ' ' : ch}
+        </span>
+      ))}
+    </span>
+  )
+}
+
 export function Work() {
   const root = useRef(null)
+  const [open, setOpen] = useState(0)
+  useSectionTracker(root, 'work')
 
   useGSAP(
     () => {
-      const mm = gsap.matchMedia()
-      mm.add('(prefers-reduced-motion: no-preference)', () => {
-        gsap.from('.work__title', {
-          yPercent: 100,
+      gsap.matchMedia().add(MOTION_OK, () => {
+        gsap.from('.work__heading .chapter__line > span', {
+          yPercent: 110,
+          stagger: 0.06,
           duration: 1,
           ease: 'expo.out',
           scrollTrigger: { trigger: '.work__head', start: 'top 80%' },
         })
-        gsap.from('.cell', {
-          clipPath: 'inset(0% 0% 100% 0%)',
-          duration: 1.1,
+        gsap.from('.row', {
+          clipPath: 'inset(0% 100% 0% 0%)',
+          duration: 1,
           ease: 'expo.inOut',
-          stagger: 0.12,
-          scrollTrigger: { trigger: '.work__grid', start: 'top 75%' },
-        })
-        gsap.from('.cell__icon', {
-          rotate: -25,
-          scale: 0.6,
-          duration: 1.2,
-          ease: 'back.out(2)',
-          stagger: 0.12,
-          scrollTrigger: { trigger: '.work__grid', start: 'top 70%' },
+          stagger: 0.1,
+          scrollTrigger: { trigger: '.work__rows', start: 'top 80%' },
         })
       })
     },
@@ -64,26 +72,62 @@ export function Work() {
   )
 
   return (
-    <section className="work" id="work" ref={root}>
+    <section className="work" id="studio" ref={root}>
       <div className="work__head">
+        <p className="mono">[ What we make ]</p>
         <h2 className="work__heading">
-          <span className="work__title">Worlds you play in. Things you wear.</span>
+          {'Worlds you play in. Things you wear.'.split(' ').map((w, i) => (
+            <span key={i}>
+              <span className="chapter__line">
+                <span>
+                  <PixelText>{w}</PixelText>
+                </span>
+              </span>{' '}
+            </span>
+          ))}
         </h2>
       </div>
-      <div className="work__grid">
-        {CELLS.map(({ key, tag, title, body, Icon, variant }) => (
-          <article key={key} className={`cell cell--${variant} cell--${key}`}>
-            <div className="cell__top mono">
-              <span>[ {tag} ]</span>
-            </div>
-            <Icon className="cell__icon" weight="thin" aria-hidden="true" />
-            <div className="cell__body">
-              <h3 className="cell__title">{title}</h3>
-              <p>{body}</p>
-            </div>
-          </article>
-        ))}
-      </div>
+
+      <ul className="work__rows">
+        {ROWS.map(({ key, tag, title, body, Icon, link }, i) => {
+          const isOpen = open === i
+          return (
+            <li
+              key={key}
+              className={`row${isOpen ? ' is-open' : ''}`}
+              onPointerEnter={() => hasFinePointer() && setOpen(i)}
+            >
+              <h3>
+                <button
+                  className="row__head"
+                  type="button"
+                  aria-expanded={isOpen}
+                  aria-controls={`row-${key}`}
+                  onClick={() => setOpen(i)}
+                  data-cursor="Open"
+                >
+                  <span className="row__key mono">{String(i + 1).padStart(2, '0')}</span>
+                  <span className="row__title">
+                    <Wave text={title} />
+                  </span>
+                  <span className="row__tag mono">[ {tag} ]</span>
+                </button>
+              </h3>
+              <div className="row__panel" id={`row-${key}`}>
+                <div className="row__inner">
+                  <Icon className="row__icon" weight="thin" aria-hidden="true" />
+                  <p>{body}</p>
+                  {link && (
+                    <a className="btn btn--line btn--sm" href={link.href} data-magnetic>
+                      <span className="btn__label">{link.label}</span>
+                    </a>
+                  )}
+                </div>
+              </div>
+            </li>
+          )
+        })}
+      </ul>
     </section>
   )
 }

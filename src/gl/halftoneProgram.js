@@ -24,16 +24,21 @@ const fragment = /* glsl */ `
   uniform vec3 uLight;
   uniform float uCell;
   uniform float uDpr;
+  uniform float uSwap;
   varying vec3 vNormal;
 
   void main() {
+    // uSwap reverses the two inks (sun mark on an ink ground)
+    vec3 ink = mix(uInk, uSun, uSwap);
+    vec3 inkDeep = mix(uInkDeep, uSun * 0.86, uSwap);
+    vec3 sun = mix(uSun, uInk, uSwap);
     vec3 n = normalize(vNormal);
     float diff = dot(n, normalize(uLight)) * 0.5 + 0.5;
     float tone = floor(diff * 4.0) / 4.0;
 
     // caps facing the viewer print in ink, extrusion walls in deep ink
     float isCap = step(0.6, abs(n.z));
-    vec3 col = mix(uInkDeep, uInk, step(0.5, tone) * isCap);
+    vec3 col = mix(inkDeep, ink, step(0.5, tone) * isCap);
 
     // 45-degree rotated screen, like an offset print plate
     vec2 p = gl_FragCoord.xy / (uCell * uDpr);
@@ -42,7 +47,7 @@ const fragment = /* glsl */ `
     float shade = 1.0 - tone;
     float radius = shade * 0.62;
     float dots = 1.0 - smoothstep(radius - 0.06, radius + 0.06, d);
-    col = mix(col, uSun, dots * step(0.26, shade));
+    col = mix(col, sun, dots * step(0.26, shade));
 
     gl_FragColor = vec4(col, 1.0);
   }
@@ -60,6 +65,7 @@ export function createHalftoneProgram(gl, { cell = 7, dpr = 1 } = {}) {
       uLight: { value: [0.55, 0.75, 0.9] },
       uCell: { value: cell },
       uDpr: { value: dpr },
+      uSwap: { value: 0 },
     },
   })
 }

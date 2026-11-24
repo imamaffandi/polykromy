@@ -1,13 +1,15 @@
 import { useEffect } from 'react'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { Header } from './components/Header'
-import { Hero } from './components/Hero'
+import { Story } from './components/story/Story'
+import { Games } from './components/games/Games'
 import { Marquee } from './components/Marquee'
 import { Work } from './components/Work'
 import { Manifesto } from './components/Manifesto'
-import { Worlds } from './components/Worlds'
-import { Principles } from './components/Principles'
 import { Footer } from './components/Footer'
+import { Loader } from './components/Loader'
+import { Companion } from './components/Companion'
+import { Interactions } from './components/Interactions'
 
 export default function App() {
   // fonts change line lengths and section heights; re-measure triggers once they land
@@ -20,16 +22,21 @@ export default function App() {
 
   return (
     <>
+      <a className="skip mono" href="#games">
+        Skip the story
+      </a>
+      <Loader />
       <Header />
       <main>
-        <Hero />
+        <Story />
+        <Games />
         <Marquee />
         <Work />
         <Manifesto />
-        <Worlds />
-        <Principles />
       </main>
       <Footer />
+      <Companion />
+      <Interactions />
     </>
   )
 }

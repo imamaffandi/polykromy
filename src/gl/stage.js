@@ -4,8 +4,8 @@ import { Camera, Renderer, Transform } from 'ogl'
  * Minimal OGL stage bound to a container element: handles DPR, resize,
  * and pausing the frame loop while the container is off-screen.
  */
-export function createStage(container, { fov = 35, z = 6 } = {}) {
-  const dpr = Math.min(window.devicePixelRatio || 1, 2)
+export function createStage(container, { fov = 35, z = 6, maxDpr = 2 } = {}) {
+  const dpr = Math.min(window.devicePixelRatio || 1, maxDpr)
   const renderer = new Renderer({ dpr, alpha: true, antialias: true, premultipliedAlpha: false })
   const gl = renderer.gl
   gl.clearColor(0, 0, 0, 0)
